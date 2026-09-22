@@ -76,7 +76,32 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
   }
+  void _square() {
+  if (_expression.isEmpty) {
+    return;
+  }
 
+  try {
+    final expression = Expression.parse(_expression);
+    final evaluator = const ExpressionEvaluator();
+    final result = evaluator.eval(expression, {});
+
+    if (result is num) {
+      setState(() {
+        _expression = (result * result).toString();
+        _result = '';
+      });
+    } else {
+      setState(() {
+        _result = 'Error';
+      });
+    }
+  } catch (e) {
+    setState(() {
+      _result = 'Error';
+    });
+  }
+}
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -143,6 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
               _button('C'),
               _button('='),
               _button('+'),
+              _button('x^2')
             ],
           ),
         ],
@@ -157,6 +183,8 @@ class _MyHomePageState extends State<MyHomePage> {
           _clear();
         } else if (text == '=') {
           _calculate();
+        } else if (text == 'x^2') {
+          _square();
         } else {
           _addToExpression(text);
         }
